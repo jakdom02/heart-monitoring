@@ -16,10 +16,15 @@ pico_sdk_init()
 add_executable(${PROJECT_NAME} 
     main.c
     i2c_ox.c
+   # uart_ox.c
+   # blink.c
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     i2c_ox.h
+    #uart_ox.h
+    #blink.h
+
 )
 
 # Create map/bin/hex/uf2 files
@@ -29,7 +34,8 @@ pico_add_extra_outputs(${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME} 
     pico_stdlib
     pico_cyw43_arch_none
-    hardwer_i2c
+    pico_binary_info
+    hardware_i2c
 )
 
 # Enable usb output, disable uart output

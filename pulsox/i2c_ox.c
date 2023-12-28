@@ -1,39 +1,16 @@
 #include "i2c_ox.h"
+#include "stdio.h"
 
-int reg_write(  i2c_inst_t *i2c, const uint addr, const uint8_t reg, uint8_t *buf, const uint8_t nbytes) {
+void bus_scan(){
+    for (int addr = 0; addr < (1 << 7); ++addr) {
+        int ret;
 
-    int num_bytes_read = 0;
-    uint8_t msg[nbytes + 1];
+        uint8_t rxdata;
 
-    // Check to make sure caller is sending 1 or more bytes
-    if (nbytes < 1) {
-        return 0;
-    }
+        ret = i2c_read_blocking(i2c_default, addr, &rxdata, 1, false);
 
-    // Append register address to front of data packet
-    msg[0] = reg;
-    for (int i = 0; i < nbytes; i++) {
-        msg[i + 1] = buf[i];
-    }
-
-    // Write data to register(s) over I2C
-    i2c_write_blocking(i2c, addr, msg, (nbytes + 1), false);
-
-    return num_bytes_read;
-}
-
-int reg_read(  i2c_inst_t *i2c, const uint addr, const uint8_t reg, uint8_t *buf, const uint8_t nbytes) {
-
-    int num_bytes_read = 0;
-
-    // Check to make sure caller is asking for 1 or more bytes
-    if (nbytes < 1) {
-        return 0;
-    }
-
-    // Read data from register(s) over I2C
-    i2c_write_blocking(i2c, addr, &reg, 1, true);
-    num_bytes_read = i2c_read_blocking(i2c, addr, buf, nbytes, false);
-
-    return num_bytes_read;
+        if(ret>=0){
+            printf("device found: 0x%02x \n", addr);
+        }
+    }  
 }
