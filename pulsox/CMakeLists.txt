@@ -16,14 +16,12 @@ pico_sdk_init()
 add_executable(${PROJECT_NAME} 
     main.c
     i2c_ox.c
-   # uart_ox.c
-   # blink.c
+    blink.c
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     i2c_ox.h
-    #uart_ox.h
-    #blink.h
+    blink.h
 
 )
 

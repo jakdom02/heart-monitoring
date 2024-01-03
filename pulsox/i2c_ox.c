@@ -1,5 +1,4 @@
 #include "i2c_ox.h"
-#include "stdio.h"
 
 void bus_scan(){
     for (int addr = 0; addr < (1 << 7); ++addr) {

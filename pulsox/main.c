@@ -4,9 +4,10 @@
 #include "pico/binary_info.h"
 //#include "hardware/i2c.h"
 #include "i2c_ox.h"
-//#include "blink_ox.h"
+#include "blink.h"
 
-
+#define ADDR 0x57 // I2C device address
+#define INT_PIN _u(32) // INT pin(27) GP27
 
 int main() {
 
@@ -41,10 +42,7 @@ int main() {
     // Loop forever
     while (true) {
     // Blink LED
-        cyw43_arch_gpio_put(led_pin, 1);
-        sleep_ms(2000);
-        cyw43_arch_gpio_put(led_pin, 0);
-        sleep_ms(2000);
+        blink(led_pin);
         printf("blink\n");
     }
 }

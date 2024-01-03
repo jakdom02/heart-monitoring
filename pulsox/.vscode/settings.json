@@ -25,7 +25,9 @@
   "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
   "cmake.sourceDirectory": "C:/Users/mrozt/Desktop/Designe_LAB/pulsox",
   "files.associations": {
-    "cyw43_arch.h": "c"
+    "cyw43_arch.h": "c",
+    "stdio.h": "c",
+    "blink.h": "c"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }
