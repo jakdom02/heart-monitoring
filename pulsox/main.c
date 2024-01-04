@@ -7,7 +7,7 @@
 #include "blink.h"
 
 #define ADDR 0x57 // I2C device address
-#define INT_PIN _u(32) // INT pin(27) GP27
+#define INT_PIN _u(16) // INT pin(27) GP27
 
 int main() {
 
@@ -15,6 +15,7 @@ int main() {
 
     // Initialize LED pin
     gpio_init(led_pin);
+        gpio_init(INT_PIN);
     gpio_set_dir(led_pin, GPIO_OUT);
 
     // Initialize chosen serial port
@@ -39,9 +40,11 @@ int main() {
     sleep_ms(2000);
     bus_scan();
 
+    gpio_pull_up(INT_PIN);
     // Loop forever
     while (true) {
     // Blink LED
+
         blink(led_pin);
         printf("blink\n");
     }
