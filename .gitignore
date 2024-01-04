@@ -1,1 +1,4 @@
 */build/*
+pulsox/build/.ninja_deps
+pulsox/build/CMakeFiles/pulsox.dir/main.c.obj
+pulsox/build/.ninja_log
