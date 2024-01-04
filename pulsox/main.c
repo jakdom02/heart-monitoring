@@ -15,7 +15,7 @@ int main() {
 
     // Initialize LED pin
     gpio_init(led_pin);
-        gpio_init(INT_PIN);
+    gpio_init(INT_PIN);
     gpio_set_dir(led_pin, GPIO_OUT);
 
     // Initialize chosen serial port
