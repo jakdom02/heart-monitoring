@@ -40,7 +40,7 @@ int main() {
     sleep_ms(2000);
     bus_scan();
 
-    //gpio_pull_up(INT_PIN);
+    gpio_pull_up(INT_PIN);
     // Loop forever
     while (true) {
     // Blink LED
