@@ -98,3 +98,5 @@
 6748	9969	7259936655128996	CMakeFiles/pulsox.dir/C_/Program_Files/Raspberry_Pi/Pico_SDK_v1.5.1/pico-sdk/lib/cyw43-driver/src/cyw43_ll.c.obj	73f553b2e6dd563b
 94	1085	7259936563923760	CMakeFiles/pulsox.dir/i2c_ox.c.obj	e2f4d0385c46372f
 104	1188	7259936565581366	CMakeFiles/pulsox.dir/blink.c.obj	d59cd76a07a7bd1c
+137	6710	7260690766283777	CMakeFiles/pulsox.dir/main.c.obj	dd6a2dc741e00353
+6712	9813	7260690791695517	pulsox.elf	ed124cf34334c490
