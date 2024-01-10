@@ -15,10 +15,14 @@ void bus_scan(){
         }
     }  
 }
+void max30100_reset(){
+    uint8_t buf[] = {0x06, 0x40}; 
+    i2c_write_blocking(i2c_default, ADDR, buf, 2, false);
+}
 
 void max30100_init(){
 
-    uint8_t buf[] = {0x06, 0x0B}; //0x0A ew do temp // 0x03 SPOmode
+    uint8_t buf[] = {0x06, 0x0B};
     i2c_write_blocking(i2c_default, ADDR, buf, 2, false);
 
     buf[0] = 0x01, buf[1] = 0xF0;

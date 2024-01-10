@@ -15,9 +15,10 @@ void gpio_callback(uint gpio, uint32_t events){
 
    if (gpio == INT_PIN) {
         printf("interupt\n");
+        printf("in int%d\n", gpio_get(INT_PIN)); 
           max30100_read_reg(0x00);
-          max30100_read_reg(0x16);
-          max30100_read_reg(0x17);
+          //max30100_read_reg(0x16);
+          //max30100_read_reg(0x17);
         data_ready = true;
     }
 }
@@ -26,6 +27,7 @@ int main() {
 
     const uint led_pin = CYW43_WL_GPIO_LED_PIN;
 
+    stdio_init_all();
     // Initialize LED pin
     gpio_init(led_pin);
     gpio_init(INT_PIN);
@@ -33,14 +35,15 @@ int main() {
     gpio_set_input_enabled(INT_PIN,1);
     //gpio_set_dir(INT_PIN, GPIO_IN);
     gpio_set_dir(led_pin, GPIO_OUT);
-
     //gpio_pull_up(INT_PIN); // to jest duza szansa ze nie jest potrzebne bo w czujniku jest pull up
+    gpio_put(INT_PIN,1);
 
-    // Initialize chosen serial port
-    stdio_init_all();
 
+    gpio_set_irq_enabled_with_callback(INT_PIN, GPIO_IRQ_EDGE_FALL, true, &gpio_callback);
+    
     // Initialize i2c 
     i2c_init(i2c_default, 100 * 1000);
+
 
     // Set default SDA, SCl pins
     gpio_set_function(PICO_DEFAULT_I2C_SDA_PIN, GPIO_FUNC_I2C);
@@ -60,20 +63,25 @@ int main() {
     sleep_ms(2000);
 
     bus_scan();
-    max30100_init(); 
+    printf("%d\n", gpio_get(INT_PIN)); 
+    max30100_reset();
+    max30100_init();
+    printf("%d\n", gpio_get(INT_PIN)); 
+    max30100_read_reg(0x00);
+    printf("%d\n", gpio_get(INT_PIN)); 
+    //printf("%d\n", gpio_get_out_level(INT_PIN));
     
-    gpio_set_irq_enabled_with_callback(INT_PIN, GPIO_IRQ_LEVEL_LOW, true, &gpio_callback);
 
     // Loop forever
     while (true) {
       if(data_ready)
         {
-          blink(led_pin);
+          printf("in loop%d\n", gpio_get(INT_PIN)); 
+          //blink(led_pin);
+          printf("blink\n");
           data_ready = false;
         }
         
-
-
         //printf("blink\n");
     }
 }
