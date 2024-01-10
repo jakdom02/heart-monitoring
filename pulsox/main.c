@@ -15,7 +15,9 @@ void gpio_callback(uint gpio, uint32_t events){
 
    if (gpio == INT_PIN) {
         printf("interupt\n");
-        //max30100_read_reg(0x00);
+          max30100_read_reg(0x00);
+          max30100_read_reg(0x16);
+          max30100_read_reg(0x17);
         data_ready = true;
     }
 }
@@ -27,10 +29,12 @@ int main() {
     // Initialize LED pin
     gpio_init(led_pin);
     gpio_init(INT_PIN);
+    gpio_disable_pulls(INT_PIN);
+    gpio_set_input_enabled(INT_PIN,1);
     //gpio_set_dir(INT_PIN, GPIO_IN);
     gpio_set_dir(led_pin, GPIO_OUT);
 
-    gpio_pull_up(INT_PIN);
+    //gpio_pull_up(INT_PIN); // to jest duza szansa ze nie jest potrzebne bo w czujniku jest pull up
 
     // Initialize chosen serial port
     stdio_init_all();
@@ -57,7 +61,7 @@ int main() {
 
     bus_scan();
     max30100_init(); 
-
+    
     gpio_set_irq_enabled_with_callback(INT_PIN, GPIO_IRQ_LEVEL_LOW, true, &gpio_callback);
 
     // Loop forever
@@ -65,11 +69,9 @@ int main() {
       if(data_ready)
         {
           blink(led_pin);
-          max30100_read_reg(0x00);
-          max30100_read_reg(0x16);
-          max30100_read_reg(0x17);
           data_ready = false;
         }
+        
 
 
         //printf("blink\n");
