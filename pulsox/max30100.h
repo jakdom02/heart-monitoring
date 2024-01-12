@@ -2,6 +2,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 
+
 void bus_scan(void);
 
 void max30100_reset(void);

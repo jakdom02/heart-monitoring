@@ -3,7 +3,7 @@
 #include "pico/cyw43_arch.h"
 #include "pico/binary_info.h"
 //#include "hardware/i2c.h"
-#include "i2c_ox.h"
+#include "max30100.h"
 #include "blink.h"
 
 #define ADDR 0x57 // I2C device address
@@ -12,9 +12,9 @@
 volatile bool data_ready = false;
 
 struct max30100_data {
-float temperature;
-float sporead;
-float hrread;
+  float temperature;
+  float sporead;
+  float hrread;
 };
 
 void gpio_callback(uint gpio, uint32_t events){

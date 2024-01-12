@@ -16,12 +16,12 @@ pico_sdk_init()
 # Tell CMake where to find the executable source file
 add_executable(${PROJECT_NAME} 
     main.c
-    i2c_ox.c
+    max30100.c
     blink.c
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-    i2c_ox.h
+    max30100.h
     blink.h
 
 )

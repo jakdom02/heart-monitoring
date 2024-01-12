@@ -1,5 +1,5 @@
 
-C:/Users/mrozt/Desktop/Designe_LAB/pulsox/build/pulsox.elf:     file format elf32-littlearm
+C:/Users/Admin/Desktop/Design Lab/heart-monitoring/pulsox/build/pulsox.elf:     file format elf32-littlearm
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
@@ -41,14 +41,14 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  18 .debug_ranges 00007038  00000000  00000000  000802e8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_line   00023939  00000000  00000000  00087320  2**0
+ 19 .debug_line   00023969  00000000  00000000  00087320  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_str    0000ab3a  00000000  00000000  000aac59  2**0
+ 20 .debug_str    0000ab6a  00000000  00000000  000aac89  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_frame  00004418  00000000  00000000  000b5794  2**2
+ 21 .debug_frame  00004418  00000000  00000000  000b57f4  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
-C:/Users/mrozt/Desktop/Designe_LAB/pulsox/build/pulsox.elf:     file format elf32-littlearm
+C:/Users/Admin/Desktop/Design Lab/heart-monitoring/pulsox/build/pulsox.elf:     file format elf32-littlearm
 
 
 Disassembly of section .boot2:
