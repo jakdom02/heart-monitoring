@@ -1,6 +1,6 @@
 #include "max30100.h"
 
-#define 1BIT_FIELD   (1)
+#define ONE_BIT_FIELD   (1)
 #define 2BIT_FIELD   ((1 << 1) | (1 << 0))
 #define 3BIT_FIELD   ((1 << 2) | (1 << 1) | (1 << 0))
 #define 4BIT_FIELD   ((1 << 3) | (1 << 2) | (1 << 1) | (1 << 0))
@@ -8,17 +8,17 @@
 #define MAX30100_I2C_ADDR       (0x57)
 
 #define MAX30100_ISR            (0x00)
-#define MAX30100_ISR_A_FULL     (1BIT_FIELD << 7)
-#define MAX30100_ISR_TEMP_RDY   (1BIT_FIELD << 6)
-#define MAX30100_ISR_HR_RDY     (1BIT_FIELD << 5)
-#define MAX30100_ISR_SPO2_RDY   (1BIT_FIELD << 4)
-#define MAX30100_ISR_PWR_RDY    (1BIT_FIELD << 0)
+#define MAX30100_ISR_A_FULL     (ONE_BIT_FIELD << 7)
+#define MAX30100_ISR_TEMP_RDY   (ONE_BIT_FIELD << 6)
+#define MAX30100_ISR_HR_RDY     (ONE_BIT_FIELD << 5)
+#define MAX30100_ISR_SPO2_RDY   (ONE_BIT_FIELD << 4)
+#define MAX30100_ISR_PWR_RDY    (ONE_BIT_FIELD << 0)
 
 #define MAX30100_IER                (0x01)
-#define MAX30100_IER_ENB_A_FUL      (1BIT_FIELD << 7)
-#define MAX30100_IER_ENB_TEMP_RDY   (1BIT_FIELD << 6)
-#define MAX30100_IER_ENB_HR_RDY     (1BIT_FIELD << 5)
-#define MAX30100_IER_ENB_SPO2_RDY   (1BIT_FIELD << 4)
+#define MAX30100_IER_ENB_A_FUL      (ONE_BIT_FIELD << 7)
+#define MAX30100_IER_ENB_TEMP_RDY   (ONE_BIT_FIELD << 6)
+#define MAX30100_IER_ENB_HR_RDY     (ONE_BIT_FIELD << 5)
+#define MAX30100_IER_ENB_SPO2_RDY   (ONE_BIT_FIELD << 4)
 
 #define MAX30100_FIFO_WRR            (0x02)
 #define MAX30100_FIFO_WRR_PTR        (4BIT_FIELD << 0)
@@ -32,13 +32,13 @@
 #define MAX30100_FIFO_DATAR          (0x05)
 
 #define MAX30100_MODE_CONFR          (0x06)
-#define MAX30100_MODE_CONFR_SHDN     (1BIT_FIELD << 7)
-#define MAX30100_MODE_CONFR_RESET    (1BIT_FIELD << 6)
-#define MAX30100_MODE_CONFR_TEMP_EN  (1BIT_FIELD << 5)
+#define MAX30100_MODE_CONFR_SHDN     (ONE_BIT_FIELD << 7)
+#define MAX30100_MODE_CONFR_RESET    (ONE_BIT_FIELD << 6)
+#define MAX30100_MODE_CONFR_TEMP_EN  (ONE_BIT_FIELD << 5)
 #define MAX30100_MODE_CONFR_MODE     (3BIT_FIELD << 0)
 
 #define MAX30100_SPO2_CONFR             (0x07)
-#define MAX30100_SPO2_CONFR_HI_RES_EN   (1BIT_FIELD << 6)
+#define MAX30100_SPO2_CONFR_HI_RES_EN   (ONE_BIT_FIELD << 6)
 #define MAX30100_SPO2_CONFR_SPO2_SR     (3BIT_FIELD << 2)
 #define MAX30100_SPO2_CONFR_LED_PW      (2BIT_FIELD << 0)
 
@@ -56,7 +56,7 @@
 #define MAX30100_REV_ID                     (0xFE)
 #define MAX30100_PART_ID                    (0xFF)
 
-#define MAX30100_MODE_HR_ONLY               (1BIT_FIELD << 1)
+#define MAX30100_MODE_HR_ONLY               (ONE_BIT_FIELD << 1)
 #define MAX30100_MODE_SPO2                  (2BIT_FIELD << 0)
 
 #define MAX30100_LED_CURRENT_CONTROL_MODE_00    (0x00)
@@ -125,7 +125,7 @@ void bus_scan()
 
 void max30100_reset()
 {
-    MAX30100_WRITE_REGISTER(MAX30100_MODE_CONF, MAX30100_MODE_CONFR_RESET);
+    MAX30100_WRITE_REGISTER(MAX30100_MODE_CONFR, MAX30100_MODE_CONFR_RESET);
 }
 
 void max30100_init()
@@ -140,7 +140,7 @@ void max30100_init()
     MAX30100_WRITE_REGISTER(MAX30100_LED_CONFR, (MAX30100_LED_CURRENT_CONTROL_MODE_76 << MAX30100_LED_CONFR_RED_PA_OFFSET) |
                                                 (MAX30100_LED_CURRENT_CONTROL_MODE_76 << MAX30100_LED_CONFR_IR_PA_OFFSET));
 
-    MAX30100_WRITE_REGISTER(MAX30100_SPO2_CONFR, 0)
+    MAX30100_WRITE_REGISTER(MAX30100_SPO2_CONFR, 0);
 }
 
 uint16_t max30100_read_temperature()

@@ -11,7 +11,7 @@ void max30100_init(void);
 
 void max30100_read_reg(uint8_t reg);
 
-float max30100_read_temperature(void);
+uint16_t max30100_read_temperature(void);
 
 void max30100_read_fifo(void);
 
