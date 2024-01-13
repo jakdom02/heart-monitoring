@@ -52,9 +52,9 @@ void max30100_init()
     MAX30100_WRITE_REGISTER(MAX30100_LED_CONFR, (MAX30100_LED_CURRENT_CONTROL_MODE_76 << MAX30100_LED_CONFR_RED_PA_OFFSET) |
                                                 (MAX30100_LED_CURRENT_CONTROL_MODE_76 << MAX30100_LED_CONFR_IR_PA_OFFSET));
 
-    MAX30100_WRITE_REGISTER(MAX30100_SPO2_CONFR, 
-                                                    (MAX30100_SPO2_SAMPLE_RATE_CONTROL_50 << MAX30100_SPO2_CONFR_SPO2_SR_OFFSET ) |
-                                                    MAX30100_LED_PULSE_WITDH_CONTROL_800);
+    MAX30100_WRITE_REGISTER(MAX30100_SPO2_CONFR,     
+                                                    (MAX30100_SPO2_SAMPLE_RATE_CONTROL_100 << MAX30100_SPO2_CONFR_SPO2_SR_OFFSET ) |
+                                                     MAX30100_LED_PULSE_WITDH_CONTROL_800);
 }
 
 void max30100_read_temperature(uint8_t* integerPtr,uint8_t* fractionPtr)
@@ -102,8 +102,8 @@ void max30100_read_fifo(uint8_t* dataPtr)
         //i2c_read_blocking(i2c_default, MAX30100_I2C_ADDR, &buf[1], 1, false);
         //i2c_read_blocking(i2c_default, MAX30100_I2C_ADDR, &buf[2], 1, false); 
         //i2c_read_blocking(i2c_default, MAX30100_I2C_ADDR, &buf[3], 1, false);
-        ((dataPtr[0] << 8) | dataPtr[1]);
-        ((dataPtr[2] << 8) | dataPtr[3]);
+        ((dataPtr[0] << 8) | dataPtr[1]) >> 2;
+        ((dataPtr[2] << 8) | dataPtr[3]) >> 2;
         //uint8_t IR = {buf[1] + buf[0]};
         //uint8_t RED = {buf[3] + buf[2]};
         //RED[0] = buf[3];
