@@ -5,7 +5,7 @@
 
 void bus_scan(void);
 
-void read_isr(void);
+uint8_t read_isr(void);
 
 void max30100_reset(void);
 

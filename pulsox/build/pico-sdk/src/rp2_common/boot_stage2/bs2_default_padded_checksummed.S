@@ -1,4 +1,4 @@
-// Padded and checksummed version of: C:/Users/mrozt/Desktop/Designe_LAB/pulsox/build/pico-sdk/src/rp2_common/boot_stage2/bs2_default.bin
+// Padded and checksummed version of: C:/Users/Admin/Desktop/Design Lab/heart-monitoring/pulsox/build/pico-sdk/src/rp2_common/boot_stage2/bs2_default.bin
 
 .cpu cortex-m0plus
 .thumb

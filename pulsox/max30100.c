@@ -122,11 +122,11 @@ void bus_scan()
         }
     }  
 }
-void read_isr()
+uint8_t read_isr()
 {
     uint8_t msg;
     MAX30100_READ_REGISTER(MAX30100_ISR,&msg,1);
-    printf("0x%02x \n", &msg);
+    return &msg;
 }
 
 void max30100_reset()
