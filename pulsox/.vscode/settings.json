@@ -23,7 +23,7 @@
   },
   "cmake.generator": "Ninja",
   "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
-  "cmake.sourceDirectory": "C:/Users/Admin/Desktop/Design Lab/heart-monitoring/pulsox",
+  "cmake.sourceDirectory": "C:/Users/mrozt/Desktop/Designe_LAB/pulsox",
   "files.associations": {
     "cyw43_arch.h": "c",
     "stdio.h": "c",

@@ -5,13 +5,13 @@
 
 void bus_scan(void);
 
+void read_isr(void);
+
 void max30100_reset(void);
 
 void max30100_init(void);
 
-void max30100_read_reg(uint8_t reg);
-
 uint16_t max30100_read_temperature(void);
 
-void max30100_read_fifo(void);
+uint32_t max30100_read_fifo(void);
 

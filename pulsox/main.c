@@ -73,7 +73,8 @@ int main() {
     //initialize max30100
     max30100_init();
     //read ISR 
-    max30100_read_reg(0x00);
+    read_isr();
+    //max30100_read_reg(0x00);
     //max30100_read_temperature();
     //printf("%d\n", gpio_get(INT_PIN)); //geting level od INT pin
     //printf("main end"); 
@@ -85,7 +86,7 @@ int main() {
         {
           //printf("..........in loop%d\n", gpio_get(INT_PIN)); 
           //blink(led_pin);         
-          printf("%2.4f", max30100_read_temperature());
+          printf("0x%04x \n", max30100_read_temperature());
           max30100_read_fifo();
           data_ready = false;
         }
