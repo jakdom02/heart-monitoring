@@ -1,103 +1,11 @@
 #include "max30100.h"
 
-#define ONE_BIT_FIELD   (1)
-#define TWO_BIT_FIELD   ((1 << 1) | (1 << 0))
-#define THREE_BIT_FIELD   ((1 << 2) | (1 << 1) | (1 << 0))
-#define FOUR_BIT_FIELD   ((1 << 3) | (1 << 2) | (1 << 1) | (1 << 0))
-
-#define MAX30100_I2C_ADDR       (0x57)
-
-#define MAX30100_ISR            (0x00)
-#define MAX30100_ISR_A_FULL     (ONE_BIT_FIELD << 7)
-#define MAX30100_ISR_TEMP_RDY   (ONE_BIT_FIELD << 6)
-#define MAX30100_ISR_HR_RDY     (ONE_BIT_FIELD << 5)
-#define MAX30100_ISR_SPO2_RDY   (ONE_BIT_FIELD << 4)
-#define MAX30100_ISR_PWR_RDY    (ONE_BIT_FIELD << 0)
-
-#define MAX30100_IER                (0x01)
-#define MAX30100_IER_ENB_A_FUL      (ONE_BIT_FIELD << 7)
-#define MAX30100_IER_ENB_TEMP_RDY   (ONE_BIT_FIELD << 6)
-#define MAX30100_IER_ENB_HR_RDY     (ONE_BIT_FIELD << 5)
-#define MAX30100_IER_ENB_SPO2_RDY   (ONE_BIT_FIELD << 4)
-
-#define MAX30100_FIFO_WRR            (0x02)
-#define MAX30100_FIFO_WRR_PTR        (FOUR_BIT_FIELD << 0)
-
-#define MAX30100_FIFO_OVFR           (0x03)
-#define MAX30100_FIFO_OVFR_COUNTER   (FOUR_BIT_FIELD << 0)
-
-#define MAX30100_FIFO_RDR            (0x04)
-#define MAX30100_FIFO_RDR_PTR        (FOUR_BIT_FIELD << 0)
-
-#define MAX30100_FIFO_DATAR          (0x05)
-
-#define MAX30100_MODE_CONFR          (0x06)
-#define MAX30100_MODE_CONFR_SHDN     (ONE_BIT_FIELD << 7)
-#define MAX30100_MODE_CONFR_RESET    (ONE_BIT_FIELD << 6)
-#define MAX30100_MODE_CONFR_TEMP_EN  (ONE_BIT_FIELD << 5)
-#define MAX30100_MODE_CONFR_MODE     (THREE_BIT_FIELD << 0)
-
-#define MAX30100_SPO2_CONFR             (0x07)
-#define MAX30100_SPO2_CONFR_HI_RES_EN   (ONE_BIT_FIELD << 6)
-#define MAX30100_SPO2_CONFR_SPO2_SR     (THREE_BIT_FIELD << 2)
-#define MAX30100_SPO2_CONFR_LED_PW      (TWO_BIT_FIELD << 0)
-
-#define MAX30100_LED_CONFR                  (0x09)
-#define MAX30100_LED_CONFR_RED_PA           (FOUR_BIT_FIELD << 4)
-#define MAX30100_LED_CONFR_RED_PA_OFFSET    (4)
-#define MAX30100_LED_CONFR_IR_PA            (FOUR_BIT_FIELD << 0)
-#define MAX30100_LED_CONFR_IR_PA_OFFSET     (0)
-
-#define MAX30100_TINTR                      (0x16)
-
-#define MAX30100_TFRACR                     (0x17)
-#define MAX30100_TFRACR_TFRAC               (FOUR_BIT_FIELD << 0)
-
-#define MAX30100_REV_ID                     (0xFE)
-#define MAX30100_PART_ID                    (0xFF)
-
-#define MAX30100_MODE_HR_ONLY               (ONE_BIT_FIELD << 1)
-#define MAX30100_MODE_SPO2                  (TWO_BIT_FIELD << 0)
-
-#define MAX30100_LED_CURRENT_CONTROL_MODE_00    (0x00)
-#define MAX30100_LED_CURRENT_CONTROL_MODE_44    (0x01)
-#define MAX30100_LED_CURRENT_CONTROL_MODE_76    (0x02)
-#define MAX30100_LED_CURRENT_CONTROL_MODE_110   (0x03)
-#define MAX30100_LED_CURRENT_CONTROL_MODE_142   (0x04)
-#define MAX30100_LED_CURRENT_CONTROL_MODE_174   (0x05)
-#define MAX30100_LED_CURRENT_CONTROL_MODE_208   (0x06)
-#define MAX30100_LED_CURRENT_CONTROL_MODE_240   (0x07)
-#define MAX30100_LED_CURRENT_CONTROL_MODE_271   (0x08)
-#define MAX30100_LED_CURRENT_CONTROL_MODE_306   (0x09)
-#define MAX30100_LED_CURRENT_CONTROL_MODE_338   (0x0A)
-#define MAX30100_LED_CURRENT_CONTROL_MODE_370   (0x0B)
-#define MAX30100_LED_CURRENT_CONTROL_MODE_402   (0x0C)
-#define MAX30100_LED_CURRENT_CONTROL_MODE_436   (0x0D)
-#define MAX30100_LED_CURRENT_CONTROL_MODE_468   (0x0E)
-#define MAX30100_LED_CURRENT_CONTROL_MODE_500   (0x0F)
-
-#define MAX30100_SPO2_SAMPLE_RATE_CONTROL_50    (0x00)    
-#define MAX30100_SPO2_SAMPLE_RATE_CONTROL_100   (0x01)    
-#define MAX30100_SPO2_SAMPLE_RATE_CONTROL_167   (0x02)    
-#define MAX30100_SPO2_SAMPLE_RATE_CONTROL_200   (0x03)    
-#define MAX30100_SPO2_SAMPLE_RATE_CONTROL_400   (0x04)    
-#define MAX30100_SPO2_SAMPLE_RATE_CONTROL_600   (0x05)    
-#define MAX30100_SPO2_SAMPLE_RATE_CONTROL_800   (0x06)    
-#define MAX30100_SPO2_SAMPLE_RATE_CONTROL_1000  (0x07)   
-
-#define MAX30100_LED_PULSE_WITDH_CONTROL_200    (0x00)
-#define MAX30100_LED_PULSE_WITDH_CONTROL_400    (0x01)
-#define MAX30100_LED_PULSE_WITDH_CONTROL_800    (0x02)
-#define MAX30100_LED_PULSE_WITDH_CONTROL_1600   (0x03)
-
-#define MAX30100_WRITE_REGISTER( register, registerData)  \ 
-    do { \
+#define MAX30100_WRITE_REGISTER( register, registerData) do { \
         uint8_t msg[] = {register, registerData}; \
         i2c_write_blocking(i2c_default, MAX30100_I2C_ADDR, msg, sizeof(msg), false); \
     } while(0)
 
-#define MAX30100_READ_REGISTER( register, dataPtr, size)  \ 
-    do { \
+#define MAX30100_READ_REGISTER( register, dataPtr, size) do { \
         uint8_t msg = register; \
         i2c_write_blocking(i2c_default, MAX30100_I2C_ADDR, &msg, 1, true); \
         i2c_read_blocking(i2c_default, MAX30100_I2C_ADDR, dataPtr, size, false); \
@@ -122,11 +30,9 @@ void bus_scan()
         }
     }  
 }
-uint8_t read_isr()
+void read_isr(uint8_t* dataPtr)
 {
-    uint8_t msg;
-    MAX30100_READ_REGISTER(MAX30100_ISR,&msg,1);
-    return &msg;
+    MAX30100_READ_REGISTER(MAX30100_ISR,dataPtr,1);
 }
 
 void max30100_reset()
@@ -146,21 +52,23 @@ void max30100_init()
     MAX30100_WRITE_REGISTER(MAX30100_LED_CONFR, (MAX30100_LED_CURRENT_CONTROL_MODE_76 << MAX30100_LED_CONFR_RED_PA_OFFSET) |
                                                 (MAX30100_LED_CURRENT_CONTROL_MODE_76 << MAX30100_LED_CONFR_IR_PA_OFFSET));
 
-    MAX30100_WRITE_REGISTER(MAX30100_SPO2_CONFR, 0);
+    MAX30100_WRITE_REGISTER(MAX30100_SPO2_CONFR, 
+                                                    (MAX30100_SPO2_SAMPLE_RATE_CONTROL_50 << MAX30100_SPO2_CONFR_SPO2_SR_OFFSET ) |
+                                                    MAX30100_LED_PULSE_WITDH_CONTROL_800);
 }
 
-uint16_t max30100_read_temperature()
+void max30100_read_temperature(uint8_t* integerPtr,uint8_t* fractionPtr)
 {  
-    uint8_t integer;
-    uint8_t fraction;
+    //uint8_t integer;
+    //uint8_t fraction;
 
-    MAX30100_READ_REGISTER(MAX30100_TINTR, &integer,1);
-    MAX30100_READ_REGISTER(MAX30100_TFRACR, &fraction,1);
+    MAX30100_READ_REGISTER(MAX30100_TINTR, integerPtr,1);
+    MAX30100_READ_REGISTER(MAX30100_TFRACR, fractionPtr,1);
   
-    return ((integer << 8) | fraction);
+    //return ((integer << 8) | fraction);
 }
 
-uint32_t max30100_read_fifo() 
+void max30100_read_fifo(uint8_t* dataPtr) 
 {
     //uint8_t rd_reg;
     //uint8_t wr_reg;
@@ -171,9 +79,9 @@ uint32_t max30100_read_fifo()
     uint8_t wr_ptr_value;
     uint8_t rd_ptr_value;
     uint8_t samples_to_read;
-    uint8_t buf[] = {0x00, 0x00,0x00,0x00};
-    uint16_t IR;
-    uint16_t RED;
+    //uint8_t buf[] = {0x00, 0x00,0x00,0x00};
+    //uint16_t IR;
+    //uint16_t RED;
     //i2c_write_timeout_us(i2c_default, MAX30100_I2C_ADDR, &reg, 1, true,50); // keep control of bus
     //i2c_read_timeout_us(i2c_default, MAX30100_I2C_ADDR, &read, 1, false,50);
 
@@ -184,23 +92,24 @@ uint32_t max30100_read_fifo()
     //i2c_write_blocking(i2c_default, MAX30100_I2C_ADDR, &rd_reg, 1, true); 
     //i2c_read_blocking(i2c_default, MAX30100_I2C_ADDR, &rd_ptr, 1, false);
     
-    samples_to_read =  abs(16+(int)wr_ptr_value-(int)rd_ptr_value) % 16;
+    samples_to_read =  1; //abs(16+(int)wr_ptr_value-(int)rd_ptr_value) % 16;
     //printf("value: %d \n",samples_to_read);
     //i2c_write_blocking(i2c_default, MAX30100_I2C_ADDR, &data_reg, 1, true); 
     for (int i = 0; i < samples_to_read; i++) 
     {
-        MAX30100_READ_REGISTER(MAX30100_FIFO_DATAR,buf,4);
+        MAX30100_READ_REGISTER(MAX30100_FIFO_DATAR,dataPtr,4);
         //i2c_read_blocking(i2c_default, MAX30100_I2C_ADDR, &buf[0], 1, false);
         //i2c_read_blocking(i2c_default, MAX30100_I2C_ADDR, &buf[1], 1, false);
         //i2c_read_blocking(i2c_default, MAX30100_I2C_ADDR, &buf[2], 1, false); 
         //i2c_read_blocking(i2c_default, MAX30100_I2C_ADDR, &buf[3], 1, false);
-
+        ((dataPtr[0] << 8) | dataPtr[1]);
+        ((dataPtr[2] << 8) | dataPtr[3]);
         //uint8_t IR = {buf[1] + buf[0]};
         //uint8_t RED = {buf[3] + buf[2]};
         //RED[0] = buf[3];
         //RED[1] = buf[2];
         //printf("IR2: 0x%04x RED2: 0x%04x\n", buf[0],buf[1]);
         //printf(":%02x%02x:%02x%02x\n", buf[0],buf[1],buf[2],buf[3]);
-        return buf;
+        //return buf;
     }
 }
