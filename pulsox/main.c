@@ -22,12 +22,6 @@ typedef enum
 static Main_StateMachine_e CurrentState = STATE_INIT;
 static volatile bool data_ready = false;
 
-struct max30100_data {
-  float temperature;
-  float sporead;
-  float hrread;
-};
-
 void gpio_callback(uint gpio, uint32_t events){
 
   if (gpio == INT_PIN)

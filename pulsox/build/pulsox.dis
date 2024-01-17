@@ -1,5 +1,5 @@
 
-C:/Users/mrozt/Desktop/Designe_LAB/pulsox/build/pulsox.elf:     file format elf32-littlearm
+C:/Users/Admin/Desktop/Design Lab/heart-monitoring/pulsox/build/pulsox.elf:     file format elf32-littlearm
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
@@ -31,24 +31,24 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
  13 .comment      00000049  00000000  00000000  0000cf08  2**0
                   CONTENTS, READONLY
- 14 .debug_info   0003eccd  00000000  00000000  0000cf51  2**0
+ 14 .debug_info   0003ecc6  00000000  00000000  0000cf51  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_abbrev 00009b1a  00000000  00000000  0004bc1e  2**0
+ 15 .debug_abbrev 00009b1a  00000000  00000000  0004bc17  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_loc    0002904c  00000000  00000000  00055738  2**0
+ 16 .debug_loc    0002904c  00000000  00000000  00055731  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_aranges 00001bf8  00000000  00000000  0007e788  2**3
+ 17 .debug_aranges 00001bf8  00000000  00000000  0007e780  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_ranges 00007058  00000000  00000000  00080380  2**3
+ 18 .debug_ranges 00007058  00000000  00000000  00080378  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_line   0002393b  00000000  00000000  000873d8  2**0
+ 19 .debug_line   0002396b  00000000  00000000  000873d0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_str    0000abb1  00000000  00000000  000aad13  2**0
+ 20 .debug_str    0000abdb  00000000  00000000  000aad3b  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_frame  00004430  00000000  00000000  000b58c4  2**2
+ 21 .debug_frame  00004430  00000000  00000000  000b5918  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
-C:/Users/mrozt/Desktop/Designe_LAB/pulsox/build/pulsox.elf:     file format elf32-littlearm
+C:/Users/Admin/Desktop/Design Lab/heart-monitoring/pulsox/build/pulsox.elf:     file format elf32-littlearm
 
 
 Disassembly of section .boot2:
@@ -587,7 +587,7 @@ Disassembly of section .text:
 10000544:	20000eb8 	.word	0x20000eb8
 10000548:	fffff001 	.word	0xfffff001
 1000054c:	00002209 	.word	0x00002209
-10000550:	00000207 	.word	0x00000207
+10000550:	00000607 	.word	0x00000607
 
 10000554 <max30100_read_temperature>:
 10000554:	b5f0      	push	{r4, r5, r6, r7, lr}
