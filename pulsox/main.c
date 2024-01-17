@@ -115,7 +115,7 @@ int main()
         case STATE_READ_DATA:      
           //printf("0x%02x%02x \n",tempInteger,tempFrac );
           max30100_read_fifo(fifoData);
-          printf("%02x%02x %02x%02x\n",fifoData[0],fifoData[1],fifoData[2],fifoData[3]);
+          printf("%02x%02x,%02x%02x|\n",fifoData[0],fifoData[1],fifoData[2],fifoData[3]);
           CurrentState = STATE_IDLE;
           break;
       }
