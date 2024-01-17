@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import serial
-import time
+import time 
 
 def getData(com):
     time_delay = 1 / 100
