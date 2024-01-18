@@ -114,8 +114,8 @@ class  MainWindow(QWidget):
         self.seriesHeartBeat.append(self.time, getdata.ir)
         self.CalculateSpoRate(getdata.ir,getdata.red)
         self.hrRateArray.append(getdata.ir)
-        if  np.sizeof(self.hrRateArray) == 300:
-            print("full")
+        if  np.size(self.hrRateArray) == 300:
+            self.CalculateHeartBeat(self.hrRateArray)
             self.hrRateArray.clear()
         #
         if self.time >= self.maximumXValue:
@@ -143,10 +143,10 @@ class  MainWindow(QWidget):
         r = ir/red
         spoRate = 110-r*25
         self.spoLabel.setText("spo2: " + str(spoRate))
-        print(spoRate)
+        #print(spoRate)
 
-    def CalculateHeartBeat(self,ir):
-        print("test")
+    def CalculateHeartBeat(self,hrArray):
+        print(hrArray)
 
 
 if __name__ == "__main__":
