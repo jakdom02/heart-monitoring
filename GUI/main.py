@@ -45,7 +45,7 @@ class  MainWindow(QWidget):
         self.timeStep = 0.01
         self.maximumXValue = 4.0
         self.time = 0.0
-        self.hrRate = []
+        self.hrRateArray = []
         
         self.comComboBox = QComboBox()
         self.refreshButton = QPushButton("refresh")
@@ -106,14 +106,17 @@ class  MainWindow(QWidget):
     def UpdatePlot(self):    
         if self.i == 1:
             self.i = self.i +1
-            minval = 8000
+            #minval = 8000
             print(self.i)
         self.time = self.time + self.timeStep
         dataFreqz = 100
         getdata.getData(self.currentComport)
         self.seriesHeartBeat.append(self.time, getdata.ir)
         self.CalculateSpoRate(getdata.ir,getdata.red)
-        self.hrRate.append(getdata.ir)
+        self.hrRateArray.append(getdata.ir)
+        if  np.sizeof(self.hrRateArray) == 300:
+            print("full")
+            self.hrRateArray.clear()
         #
         if self.time >= self.maximumXValue:
             self.time = 0.0
