@@ -39,14 +39,18 @@ class Worker(QObject):
 class  MainWindow(QWidget):
     def __init__(self):
         super().__init__()
-        
+
+        self.currentComport = "X"
         self.i = 1
-        self.timeStep = 0.1
-        self.maximumXValue = 15.0
+        self.timeStep = 0.01
+        self.maximumXValue = 4.0
         self.time = 0.0
+        self.hrRate = []
         
         self.comComboBox = QComboBox()
         self.refreshButton = QPushButton("refresh")
+
+        self.spoLabel = QLabel()
         
         self.seriesHeartBeat = QLineSeries()
         
@@ -64,11 +68,12 @@ class  MainWindow(QWidget):
         
         portsViewLayout.addWidget(self.refreshButton)
         portsViewLayout.addWidget(self.comComboBox)
+        portsViewLayout.addWidget(self.spoLabel)
         
         mainLayout.addLayout(portsViewLayout)
         self.setLayout(mainLayout)
         
-        self.worker = Worker(self.UpdatePlot,100)
+        self.worker = Worker(self.UpdatePlot,10)
         self.refreshButton.clicked.connect(self.worker.start)
    
         #self.SetChart(self.chartHeartBeat,self.seriesHeartBeat,2.0,"acc","x")
@@ -80,7 +85,7 @@ class  MainWindow(QWidget):
         axisX = QValueAxis()
         axisY = QValueAxis()
         
-        axisY.setRange(0,xAxisRange) # setting the range for y axis
+        axisY.setRange(7000,9000) # setting the range for y axis
         
         axisY.setTitleText("Przyśpieszenie[g]") 
         
@@ -99,17 +104,16 @@ class  MainWindow(QWidget):
         chartView.setSizePolicy(size)
         
     def UpdatePlot(self):    
-        #print(self.i)
-        #print('updating')
         if self.i == 1:
             self.i = self.i +1
+            minval = 8000
             print(self.i)
         self.time = self.time + self.timeStep
         dataFreqz = 100
-        getdata.getData("COM6")
+        getdata.getData(self.currentComport)
         self.seriesHeartBeat.append(self.time, getdata.ir)
-        print(getdata.ir)
-
+        self.CalculateSpoRate(getdata.ir,getdata.red)
+        self.hrRate.append(getdata.ir)
         #
         if self.time >= self.maximumXValue:
             self.time = 0.0
@@ -131,6 +135,16 @@ class  MainWindow(QWidget):
     def AddPortsToCombo(self,comList,combo):
         for port in sorted(comList):
             combo.addItem(port)
+    
+    def CalculateSpoRate(self,ir,red):
+        r = ir/red
+        spoRate = 110-r*25
+        self.spoLabel.setText("spo2: " + str(spoRate))
+        print(spoRate)
+
+    def CalculateHeartBeat(self,ir):
+        print("test")
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
@@ -139,6 +153,5 @@ if __name__ == "__main__":
     window.setWindowTitle("Heart Monitoring")
     window.show()
     window.resize(1200, 900)
-    # inertial.setInitAng()
     #window.showFullScreen()
     sys.exit(app.exec())
