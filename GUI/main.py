@@ -40,13 +40,14 @@ class  MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.currentComport = "X"
+        self.currentComport = "COM4"
         self.i = 1
         self.timeStep = 0.01
         self.maximumXValue = 4.0
         self.time = 0.0
         self.hrRateArray = []
-        
+        self.hbDetectedIndex =[]
+
         self.comComboBox = QComboBox()
         self.refreshButton = QPushButton("refresh")
 
@@ -85,12 +86,12 @@ class  MainWindow(QWidget):
         axisX = QValueAxis()
         axisY = QValueAxis()
         
-        axisY.setRange(7000,9000) # setting the range for y axis
+        axisY.setRange(10000,16000) # setting the range for y axis
         
-        axisY.setTitleText("Przyśpieszenie[g]") 
+        axisY.setTitleText("Signal[V]") 
         
         axisX.setRange(0.0,self.maximumXValue) # setting the range for x axis
-        axisX.setTitleText("Czas[s]") # setting title to x axis
+        axisX.setTitleText("Time[s]") # setting title to x axis
         
         chart.setAxisX(axisX,series) # connecting axis propertis to series 
         chart.setAxisY(axisY,series)
@@ -112,10 +113,10 @@ class  MainWindow(QWidget):
         dataFreqz = 100
         getdata.getData(self.currentComport)
         self.seriesHeartBeat.append(self.time, getdata.ir)
-        self.CalculateSpoRate(getdata.ir,getdata.red)
+        #self.CalculateSpoRate(getdata.ir,getdata.red)
         self.hrRateArray.append(getdata.ir)
         if  np.size(self.hrRateArray) == 300:
-            self.CalculateHeartBeat(self.hrRateArray)
+            self.CalculateHeartBeat(self.hrRateArray,40,80)
             self.hrRateArray.clear()
         #
         if self.time >= self.maximumXValue:
@@ -145,8 +146,17 @@ class  MainWindow(QWidget):
         self.spoLabel.setText("spo2: " + str(spoRate))
         #print(spoRate)
 
-    def CalculateHeartBeat(self,hrArray):
-        print(hrArray)
+    def CalculateHeartBeat(self,hrArray,number1,number2, i = 0):
+        self.hbDetected = 0
+        while i < len(hrArray) - 2:
+            if hrArray[i + 1] < hrArray[i] - number1 and hrArray[i + 2] < hrArray[i] - number2:
+                hbDetected = i                
+                self.hbDetectedIndex.append(hbDetected)                
+            else:
+                i += 3
+                
+
+        print(self.hbDetectedIndex)
 
 
 if __name__ == "__main__":
