@@ -5,7 +5,7 @@ import sys
 import numpy as np
 import getdata
 from PySide6.QtCore import QObject, QTimer, Qt
-from PySide6.QtGui import QPainter
+from PySide6.QtGui import QPainter, QFont
 from PySide6.QtWidgets import QApplication, QSizePolicy, QPushButton, QHBoxLayout, QWidget,QVBoxLayout, QComboBox, QLabel
 from PySide6.QtCharts import QChart, QChartView, QLineSeries, QValueAxis
 
@@ -53,6 +53,17 @@ class  MainWindow(QWidget):
         self.spoLabel = QLabel()
         self.BPMlabel = QLabel()
         self.infoLabel = QLabel()
+
+        self.infoFont = QFont()
+        self.infoFont.setPointSize(50)
+        
+
+        self.BPMlabel.setText('BPM: ...')
+        self.BPMlabel.setFont(self.infoFont)
+
+        self.spoLabel.setText('SPO<sub>2</sub>: ...')
+        self.spoLabel.setFont(self.infoFont)
+        
         
         self.seriesHeartBeat = QLineSeries()
         
@@ -80,7 +91,7 @@ class  MainWindow(QWidget):
         mainLayout.addLayout(portsViewLayout)
         mainLayout.addLayout(infoPanelLayout)
         mainLayout.addLayout(chartViewLayout)
-        
+
         mainLayout.setStretchFactor(portsViewLayout,1)
         mainLayout.setStretchFactor(infoPanelLayout,1)
         mainLayout.setStretchFactor(chartViewLayout,6)
@@ -127,7 +138,7 @@ class  MainWindow(QWidget):
         dataFreqz = 100
         getdata.getData(self.currentComport)
         self.seriesHeartBeat.append(self.time, getdata.ir)
-        #self.CalculateSpoRate(getdata.ir,getdata.red)
+        self.CalculateSpoRate(getdata.ir,getdata.red)
         self.hrRateArray.append(getdata.ir)
         if  np.size(self.hrRateArray) == 300:
             self.CalculateHeartBeat(self.hrRateArray,20,55)
@@ -160,7 +171,7 @@ class  MainWindow(QWidget):
     def CalculateSpoRate(self,ir,red):
         r = ir/red
         spoRate = 110-r*25
-        self.spoLabel.setText("spo2: " + str(spoRate))
+        self.spoLabel.setText("spo2: " + str(np.round(spoRate,3)))
         #print(spoRate)
 
 
@@ -191,7 +202,7 @@ class  MainWindow(QWidget):
                     if bpm > 50 and bpm < 250:
                         bpmArray.append(bpm)
                     i+=1
-                self.BPMlabel.setText("BPM: " + str(np.round(np.average(bpmArray))))
+                self.BPMlabel.setText("BPM: " + str(np.round(np.average(bpmArray),3)))
         print(indexarray)
                 
 
