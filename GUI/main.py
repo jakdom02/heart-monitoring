@@ -5,7 +5,7 @@ import sys
 import numpy as np
 import getdata
 from PySide6.QtCore import QObject, QTimer, Qt
-from PySide6.QtGui import QPainter, QFont
+from PySide6.QtGui import QPainter, QFont, QFontDatabase, QBrush,QColor
 from PySide6.QtWidgets import QApplication, QSizePolicy, QPushButton, QHBoxLayout, QWidget,QVBoxLayout, QComboBox, QLabel
 from PySide6.QtCharts import QChart, QChartView, QLineSeries, QValueAxis
 
@@ -56,6 +56,11 @@ class  MainWindow(QWidget):
 
         self.infoFont = QFont()
         self.infoFont.setPointSize(50)
+        self.infoFont.setFamily("ISOCT3")
+        self.infoFont
+
+        self.fonts = QFontDatabase()
+        print(self.fonts.families())
         
 
         self.BPMlabel.setText('BPM: ...')
@@ -68,6 +73,7 @@ class  MainWindow(QWidget):
         self.seriesHeartBeat = QLineSeries()
         
         self.chartHeartBeat = QChart()
+        self.chartHeartBeat.setBackgroundBrush(QBrush(QColor("#F1F4FF")))
         
         mainLayout = QVBoxLayout()
         chartViewLayout = QHBoxLayout()
@@ -212,6 +218,7 @@ if __name__ == "__main__":
 
     window = MainWindow()
     window.setWindowTitle("Heart Monitoring")
+    window.setStyleSheet("background-color: #A2A2A1;")
     window.show()
     window.resize(1200, 900)
     #window.showFullScreen()
