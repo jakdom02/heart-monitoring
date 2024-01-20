@@ -46,21 +46,24 @@ class  MainWindow(QWidget):
         self.maximumXValue = 4.0
         self.time = 0.0
         self.hrRateArray = []
-        self.hbDetectedIndex =[]
 
         self.comComboBox = QComboBox()
         self.refreshButton = QPushButton("refresh")
 
         self.spoLabel = QLabel()
+        self.BPMlabel = QLabel()
+        self.infoLabel = QLabel()
         
         self.seriesHeartBeat = QLineSeries()
         
         self.chartHeartBeat = QChart()
         
         mainLayout = QVBoxLayout()
+        chartViewLayout = QHBoxLayout()
         portsViewLayout = QHBoxLayout()
+        infoPanelLayout = QHBoxLayout()
         
-        self.SetChart(self.chartHeartBeat,self.seriesHeartBeat,mainLayout,15000,"x")
+        self.SetChart(self.chartHeartBeat,self.seriesHeartBeat,chartViewLayout,15000,"x")
         
         
         self.FindAvalibleComports(comList) 
@@ -69,9 +72,19 @@ class  MainWindow(QWidget):
         
         portsViewLayout.addWidget(self.refreshButton)
         portsViewLayout.addWidget(self.comComboBox)
-        portsViewLayout.addWidget(self.spoLabel)
-        
+
+        infoPanelLayout.addWidget(self.BPMlabel)
+        infoPanelLayout.addWidget(self.spoLabel)
+        infoPanelLayout.addWidget(self.spoLabel)
+
         mainLayout.addLayout(portsViewLayout)
+        mainLayout.addLayout(infoPanelLayout)
+        mainLayout.addLayout(chartViewLayout)
+        
+        mainLayout.setStretchFactor(portsViewLayout,1)
+        mainLayout.setStretchFactor(infoPanelLayout,1)
+        mainLayout.setStretchFactor(chartViewLayout,6)
+        
         self.setLayout(mainLayout)
         
         self.worker = Worker(self.UpdatePlot,10)
@@ -86,7 +99,7 @@ class  MainWindow(QWidget):
         axisX = QValueAxis()
         axisY = QValueAxis()
         
-        axisY.setRange(10000,16000) # setting the range for y axis
+        axisY.setRange(6500,8500) # setting the range for y axis
         
         axisY.setTitleText("Signal[V]") 
         
@@ -104,6 +117,7 @@ class  MainWindow(QWidget):
         size.setHorizontalStretch(1)
         chartView.setSizePolicy(size)
         
+
     def UpdatePlot(self):    
         if self.i == 1:
             self.i = self.i +1
@@ -116,7 +130,7 @@ class  MainWindow(QWidget):
         #self.CalculateSpoRate(getdata.ir,getdata.red)
         self.hrRateArray.append(getdata.ir)
         if  np.size(self.hrRateArray) == 300:
-            self.CalculateHeartBeat(self.hrRateArray,40,80)
+            self.CalculateHeartBeat(self.hrRateArray,20,55)
             self.hrRateArray.clear()
         #
         if self.time >= self.maximumXValue:
@@ -132,34 +146,57 @@ class  MainWindow(QWidget):
             comList.append("{}".format(port))
         print(comList)
 
+
     def SetCurrentPort(self,index):
         self.currentComport = self.comComboBox.itemText(index)
         print(self.currentComport)
-      
+
+
     def AddPortsToCombo(self,comList,combo):
         for port in sorted(comList):
             combo.addItem(port)
     
+
     def CalculateSpoRate(self,ir,red):
         r = ir/red
         spoRate = 110-r*25
         self.spoLabel.setText("spo2: " + str(spoRate))
         #print(spoRate)
 
+
     def CalculateHeartBeat(self,hrArray,number1,number2, i = 0):
-        self.hbDetected = 0
+        hbDetected = 0
+        hbDetectedIndex = [] 
         while i < len(hrArray) - 2:
             if hrArray[i + 1] < hrArray[i] - number1 and hrArray[i + 2] < hrArray[i] - number2:
+                print('detected' + str(i))
                 hbDetected = i                
-                self.hbDetectedIndex.append(hbDetected)                
+                hbDetectedIndex.append(hbDetected)
+                i += 20 
+                #print('detected')              
             else:
-                i += 3
+                i += 1
+        self.CalculateBeatFromIndex(hbDetectedIndex)
+
+
+    def CalculateBeatFromIndex(self,indexarray):
+        i = 0
+        bpmArray = []
+        match len(indexarray):
+            case 0:
+                print('error: too few samples')
+            case default:
+                while i < len(indexarray) - 1:
+                    bpm = 60/((indexarray[i+1] - indexarray[i])/100)
+                    if bpm > 50 and bpm < 250:
+                        bpmArray.append(bpm)
+                    i+=1
+                self.BPMlabel.setText("BPM: " + str(np.round(np.average(bpmArray))))
+        print(indexarray)
                 
 
-        print(self.hbDetectedIndex)
 
-
-if __name__ == "__main__":
+if __name__ == "__main__": 
     app = QApplication(sys.argv)
 
     window = MainWindow()
