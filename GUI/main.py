@@ -61,13 +61,12 @@ class  MainWindow(QWidget):
         self.axisY = QValueAxis()
 
         self.infoFont = QFont()
-        self.infoFont.setPointSize(50)
+        self.infoFont.setPointSize(40)
         self.infoFont.setFamily("ISOCT3")
         self.infoFont
 
         self.fonts = QFontDatabase()
-        print(self.fonts.families())
-        
+        #print(self.fonts.families())    
 
         self.BPMlabel.setText('BPM: ...')
         self.BPMlabel.setFont(self.infoFont)
@@ -86,8 +85,7 @@ class  MainWindow(QWidget):
         portsViewLayout = QHBoxLayout()
         infoPanelLayout = QHBoxLayout()
         
-        self.SetChart(self.chartHeartBeat,self.seriesHeartBeat,chartViewLayout,15000,"x")
-        
+        self.SetChart(self.chartHeartBeat,self.seriesHeartBeat,chartViewLayout,15000,"x")   
         
         self.FindAvalibleComports(comList) 
         self.AddPortsToCombo(comList,self.comComboBox)
@@ -113,13 +111,12 @@ class  MainWindow(QWidget):
         self.worker = Worker(self.UpdatePlot,10)
         self.refreshButton.clicked.connect(self.worker.start)
    
-        #self.SetChart(self.chartHeartBeat,self.seriesHeartBeat,2.0,"acc","x")
+
     def SetChart(self,chart,series,chartLayout,xAxisRange,title):
 
         chart.legend().hide()
         chart.addSeries(series)
 
-        # .. axis properties ..
         axisX = QValueAxis()
         
         self.axisY.setTitleText("Signal[V]") 
@@ -143,10 +140,8 @@ class  MainWindow(QWidget):
     def UpdatePlot(self):    
         if self.i == 1:
             self.i = self.i +1
-            #minval = 8000
-            print(self.i)
+            #print(self.i)
         self.time = self.time + self.timeStep
-        dataFreqz = 100
         getdata.getData(self.currentComport)
         self.seriesHeartBeat.append(self.time, getdata.ir)
         self.redArray.append(getdata.red)
@@ -199,30 +194,26 @@ class  MainWindow(QWidget):
         redMaxVal = np.max(redReadArray)
 
         redDC = np.mean(redReadArray)
-        #print(redDC)
         irDC = np.mean(irReadArray)
         redAC = redMaxVal-redMinVal
         irAC = irMaxVal-irMinVal
-        r = (int(redAC)/int(redDC))/(int(irAC)/int(irDC))
+        r = (redAC/redDC)/(irAC/irDC)
         spoRate = 110-r*25
         self.spoLabel.setText("spo2: " + str(np.round(spoRate,3)))
-        #print(spoRate)
 
 
     def CalculateHeartBeat(self,irReadingArray,number1,number2, i = 0):
 
-        print(irReadingArray)
+        #print(irReadingArray)
         #plt.plot(irReadingArray)
         #plt.show()
         hbDetected = 0
         hbDetectedIndex = [] 
         while i < len(irReadingArray) - 2:
             if int(irReadingArray[i + 1]) < int(irReadingArray[i]) - number1 and int(irReadingArray[i + 2]) < int(irReadingArray[i]) - number2:
-                print('detected' + str(i))
                 hbDetected = i                
                 hbDetectedIndex.append(hbDetected)
-                i += 30 
-                #print('detected')              
+                i += 30             
             else:
                 i += 1
         self.CalculateBeatFromIndex(hbDetectedIndex)
@@ -241,9 +232,7 @@ class  MainWindow(QWidget):
                     if bpm > 50 and bpm < 250:
                         bpmArray.append(bpm)
                     i+=1
-                self.BPMlabel.setText("BPM: " + str(np.round(np.average(bpmArray),3)))
-        #print(indexarray)
-                
+                self.BPMlabel.setText("BPM: " + str(np.round(np.average(bpmArray),3)))              
 
 
 if __name__ == "__main__": 
