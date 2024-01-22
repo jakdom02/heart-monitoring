@@ -156,23 +156,13 @@ class  MainWindow(QWidget):
             smoother = ConvolutionSmoother(window_len=15,window_type="ones")
             smoother.smooth(self.hrRateArray)
             newIR = smoother.smooth_data[0]
-            Ir = []
-            for x in range(len(newIR)):
-                Ir.append(round(float(newIR[x])))
-            Ir = np.array(Ir)
         
-            #print(Ir[6])
             smoother2 = ConvolutionSmoother(window_len=15,window_type="ones")
             smoother2.smooth(self.redArray)
             newRED = smoother2.smooth_data[0]
-            Red = []
-            for x in range(len(newRED)):
-                Red.append(round(int(newRED[x])))
-            Red = np.array(Red)
 
-            #print(np.array(smoother.smooth_data[0]))
-            self.CalculateHeartBeat(Ir,20,40)
-            self.CalculateSpoRate(Ir,Red)
+            self.CalculateHeartBeat(newIR,5,10)
+            self.CalculateSpoRate(newIR,newRED)
 
             self.hrRateArray.clear()
             self.redArray.clear()
@@ -220,18 +210,15 @@ class  MainWindow(QWidget):
 
 
     def CalculateHeartBeat(self,irReadingArray,number1,number2, i = 0):
-        #print(len(irReadingArray))
-        n = 15
-        b = [1.0/n] * 15
-        a = 1
-        print(irReadingArray[6])
+
+        print(irReadingArray)
         #plt.plot(irReadingArray)
         #plt.show()
         hbDetected = 0
         hbDetectedIndex = [] 
         while i < len(irReadingArray) - 2:
-            if irReadingArray[i + 1] < irReadingArray[i] - number1 and irReadingArray[i + 2] < irReadingArray[i] - number2:
-                #print('detected' + str(i))
+            if int(irReadingArray[i + 1]) < int(irReadingArray[i]) - number1 and int(irReadingArray[i + 2]) < int(irReadingArray[i]) - number2:
+                print('detected' + str(i))
                 hbDetected = i                
                 hbDetectedIndex.append(hbDetected)
                 i += 30 
