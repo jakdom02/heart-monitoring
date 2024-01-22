@@ -49,6 +49,7 @@ class  MainWindow(QWidget):
         self.maximumXValue = 4.0
         self.time = 0.0
         self.hrRateArray = []
+        self.redArray = []
 
         self.comComboBox = QComboBox()
         self.refreshButton = QPushButton("refresh")
@@ -148,12 +149,33 @@ class  MainWindow(QWidget):
         dataFreqz = 100
         getdata.getData(self.currentComport)
         self.seriesHeartBeat.append(self.time, getdata.ir)
-        
+        self.redArray.append(getdata.red)
         self.hrRateArray.append(getdata.ir)
         if  np.size(self.hrRateArray) == 400:
-            self.CalculateHeartBeat(self.hrRateArray,20,60)
-            self.CalculateSpoRate(self.hrRateArray)
+
+            smoother = ConvolutionSmoother(window_len=15,window_type="ones")
+            smoother.smooth(self.hrRateArray)
+            newIR = smoother.smooth_data[0]
+            Ir = []
+            for x in range(len(newIR)):
+                Ir.append(round(float(newIR[x])))
+            Ir = np.array(Ir)
+        
+            #print(Ir[6])
+            smoother2 = ConvolutionSmoother(window_len=15,window_type="ones")
+            smoother2.smooth(self.redArray)
+            newRED = smoother2.smooth_data[0]
+            Red = []
+            for x in range(len(newRED)):
+                Red.append(round(int(newRED[x])))
+            Red = np.array(Red)
+
+            #print(np.array(smoother.smooth_data[0]))
+            self.CalculateHeartBeat(Ir,20,40)
+            self.CalculateSpoRate(Ir,Red)
+
             self.hrRateArray.clear()
+            self.redArray.clear()
         #
         if self.time >= self.maximumXValue:
             self.time = 0.0
@@ -179,12 +201,21 @@ class  MainWindow(QWidget):
             combo.addItem(port)
     
 
-    def CalculateSpoRate(self,irReadArray):
-        irMinVal = min(irReadArray)
-        irMaxVal = max(irReadArray)
+    def CalculateSpoRate(self,irReadArray,redReadArray):
+        irMinVal = np.min(irReadArray)
+        irMaxVal = np.max(irReadArray)
         self.axisY.setRange(irMinVal-1000,irMaxVal+1000)
+        redMinVal = np.min(redReadArray)
+        redMaxVal = np.max(redReadArray)
 
-        #self.spoLabel.setText("spo2: " + str(np.round(spoRate,3)))
+        redDC = np.mean(redReadArray)
+        #print(redDC)
+        irDC = np.mean(irReadArray)
+        redAC = redMaxVal-redMinVal
+        irAC = irMaxVal-irMinVal
+        r = (int(redAC)/int(redDC))/(int(irAC)/int(irDC))
+        spoRate = 110-r*25
+        self.spoLabel.setText("spo2: " + str(np.round(spoRate,3)))
         #print(spoRate)
 
 
@@ -193,16 +224,14 @@ class  MainWindow(QWidget):
         n = 15
         b = [1.0/n] * 15
         a = 1
-        smoother = ConvolutionSmoother(window_len=15,window_type="ones")
-        smoother.smooth(irReadingArray)
-
-        #plt.plot(smoother.smooth_data[0])
+        print(irReadingArray[6])
+        #plt.plot(irReadingArray)
         #plt.show()
         hbDetected = 0
         hbDetectedIndex = [] 
         while i < len(irReadingArray) - 2:
             if irReadingArray[i + 1] < irReadingArray[i] - number1 and irReadingArray[i + 2] < irReadingArray[i] - number2:
-                print('detected' + str(i))
+                #print('detected' + str(i))
                 hbDetected = i                
                 hbDetectedIndex.append(hbDetected)
                 i += 30 
@@ -226,7 +255,7 @@ class  MainWindow(QWidget):
                         bpmArray.append(bpm)
                     i+=1
                 self.BPMlabel.setText("BPM: " + str(np.round(np.average(bpmArray),3)))
-        print(indexarray)
+        #print(indexarray)
                 
 
 
