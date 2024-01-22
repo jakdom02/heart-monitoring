@@ -4,6 +4,9 @@ import serial
 import sys
 import numpy as np
 import getdata
+import matplotlib.pyplot as plt
+from scipy.signal import lfilter 
+from tsmoothie.smoother import *
 from PySide6.QtCore import QObject, QTimer, Qt
 from PySide6.QtGui import QPainter, QFont, QFontDatabase, QBrush,QColor
 from PySide6.QtWidgets import QApplication, QSizePolicy, QPushButton, QHBoxLayout, QWidget,QVBoxLayout, QComboBox, QLabel
@@ -147,8 +150,8 @@ class  MainWindow(QWidget):
         self.seriesHeartBeat.append(self.time, getdata.ir)
         
         self.hrRateArray.append(getdata.ir)
-        if  np.size(self.hrRateArray) == 300:
-            self.CalculateHeartBeat(self.hrRateArray,20,55)
+        if  np.size(self.hrRateArray) == 400:
+            self.CalculateHeartBeat(self.hrRateArray,20,60)
             self.CalculateSpoRate(self.hrRateArray)
             self.hrRateArray.clear()
         #
@@ -186,6 +189,15 @@ class  MainWindow(QWidget):
 
 
     def CalculateHeartBeat(self,irReadingArray,number1,number2, i = 0):
+        #print(len(irReadingArray))
+        n = 15
+        b = [1.0/n] * 15
+        a = 1
+        smoother = ConvolutionSmoother(window_len=15,window_type="ones")
+        smoother.smooth(irReadingArray)
+
+        #plt.plot(smoother.smooth_data[0])
+        #plt.show()
         hbDetected = 0
         hbDetectedIndex = [] 
         while i < len(irReadingArray) - 2:
@@ -193,7 +205,7 @@ class  MainWindow(QWidget):
                 print('detected' + str(i))
                 hbDetected = i                
                 hbDetectedIndex.append(hbDetected)
-                i += 20 
+                i += 30 
                 #print('detected')              
             else:
                 i += 1
@@ -201,6 +213,7 @@ class  MainWindow(QWidget):
 
 
     def CalculateBeatFromIndex(self,indexarray):
+
         i = 0
         bpmArray = []
         match len(indexarray):
