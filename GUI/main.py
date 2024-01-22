@@ -54,6 +54,8 @@ class  MainWindow(QWidget):
         self.BPMlabel = QLabel()
         self.infoLabel = QLabel()
 
+        self.axisY = QValueAxis()
+
         self.infoFont = QFont()
         self.infoFont.setPointSize(50)
         self.infoFont.setFamily("ISOCT3")
@@ -112,19 +114,18 @@ class  MainWindow(QWidget):
 
         chart.legend().hide()
         chart.addSeries(series)
+
         # .. axis properties ..
         axisX = QValueAxis()
-        axisY = QValueAxis()
         
-        axisY.setRange(6500,8500) # setting the range for y axis
-        
-        axisY.setTitleText("Signal[V]") 
+        self.axisY.setTitleText("Signal[V]") 
+        self.axisY.setRange(0,10000)
         
         axisX.setRange(0.0,self.maximumXValue) # setting the range for x axis
         axisX.setTitleText("Time[s]") # setting title to x axis
         
         chart.setAxisX(axisX,series) # connecting axis propertis to series 
-        chart.setAxisY(axisY,series)
+        chart.setAxisY(self.axisY,series)
            
         chartView = QChartView(chart) #adding chart to chartView
         chartView.setRenderHint(QPainter.Antialiasing)
@@ -144,10 +145,11 @@ class  MainWindow(QWidget):
         dataFreqz = 100
         getdata.getData(self.currentComport)
         self.seriesHeartBeat.append(self.time, getdata.ir)
-        self.CalculateSpoRate(getdata.ir,getdata.red)
+        
         self.hrRateArray.append(getdata.ir)
         if  np.size(self.hrRateArray) == 300:
             self.CalculateHeartBeat(self.hrRateArray,20,55)
+            self.CalculateSpoRate(self.hrRateArray)
             self.hrRateArray.clear()
         #
         if self.time >= self.maximumXValue:
@@ -174,18 +176,20 @@ class  MainWindow(QWidget):
             combo.addItem(port)
     
 
-    def CalculateSpoRate(self,ir,red):
-        r = ir/red
-        spoRate = 110-r*25
-        self.spoLabel.setText("spo2: " + str(np.round(spoRate,3)))
+    def CalculateSpoRate(self,irReadArray):
+        irMinVal = min(irReadArray)
+        irMaxVal = max(irReadArray)
+        self.axisY.setRange(irMinVal-1000,irMaxVal+1000)
+
+        #self.spoLabel.setText("spo2: " + str(np.round(spoRate,3)))
         #print(spoRate)
 
 
-    def CalculateHeartBeat(self,hrArray,number1,number2, i = 0):
+    def CalculateHeartBeat(self,irReadingArray,number1,number2, i = 0):
         hbDetected = 0
         hbDetectedIndex = [] 
-        while i < len(hrArray) - 2:
-            if hrArray[i + 1] < hrArray[i] - number1 and hrArray[i + 2] < hrArray[i] - number2:
+        while i < len(irReadingArray) - 2:
+            if irReadingArray[i + 1] < irReadingArray[i] - number1 and irReadingArray[i + 2] < irReadingArray[i] - number2:
                 print('detected' + str(i))
                 hbDetected = i                
                 hbDetectedIndex.append(hbDetected)
