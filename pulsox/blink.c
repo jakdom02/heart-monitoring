@@ -1,3 +1,8 @@
+/**
+ * @file blink.c
+ * @author T.Mroz J.Domagala
+ */
+
 #include "blink.h"
 
 void blink(const uint led_pin)

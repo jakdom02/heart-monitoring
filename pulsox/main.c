@@ -86,7 +86,7 @@ int main()
     uint8_t fifoData[] = {0x00, 0x00, 0x00, 0x00};
     uint8_t tempInteger;
     uint8_t tempFrac;
-    // Loop forever
+
     while (true) 
     {
       switch(CurrentState)

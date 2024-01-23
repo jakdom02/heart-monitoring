@@ -1,3 +1,8 @@
+/**
+ * @file max30100.c
+ * @author T.Mroz J.Domagala
+ */
+
 #include "max30100.h"
 
 #define MAX30100_WRITE_REGISTER( register, registerData) do { \
@@ -70,46 +75,19 @@ void max30100_read_temperature(uint8_t* integerPtr,uint8_t* fractionPtr)
 
 void max30100_read_fifo(uint8_t* dataPtr) 
 {
-    //uint8_t rd_reg;
-    //uint8_t wr_reg;
-    //uint8_t data_reg;
-    //wr_reg = 0x02;
-    //rd_reg = 0x04;
-    //data_reg = 0x05;
+
     uint8_t wr_ptr_value;
     uint8_t rd_ptr_value;
     uint8_t samples_to_read;
-    //uint8_t buf[] = {0x00, 0x00,0x00,0x00};
-    //uint16_t IR;
-    //uint16_t RED;
-    //i2c_write_timeout_us(i2c_default, MAX30100_I2C_ADDR, &reg, 1, true,50); // keep control of bus
-    //i2c_read_timeout_us(i2c_default, MAX30100_I2C_ADDR, &read, 1, false,50);
-
     MAX30100_READ_REGISTER(MAX30100_FIFO_WRR,&wr_ptr_value,1);
-    //i2c_write_blocking(i2c_default, MAX30100_I2C_ADDR, &wr_reg, 1, true); 
-    //i2c_read_blocking(i2c_default, MAX30100_I2C_ADDR, &wr_ptr, 1, false);
     MAX30100_READ_REGISTER(MAX30100_FIFO_RDR,&rd_ptr_value,1);
-    //i2c_write_blocking(i2c_default, MAX30100_I2C_ADDR, &rd_reg, 1, true); 
-    //i2c_read_blocking(i2c_default, MAX30100_I2C_ADDR, &rd_ptr, 1, false);
-    
+
     samples_to_read =  1; //abs(16+(int)wr_ptr_value-(int)rd_ptr_value) % 16;
-    //printf("value: %d \n",samples_to_read);
-    //i2c_write_blocking(i2c_default, MAX30100_I2C_ADDR, &data_reg, 1, true); 
+
     for (int i = 0; i < samples_to_read; i++) 
     {
         MAX30100_READ_REGISTER(MAX30100_FIFO_DATAR,dataPtr,4);
-        //i2c_read_blocking(i2c_default, MAX30100_I2C_ADDR, &buf[0], 1, false);
-        //i2c_read_blocking(i2c_default, MAX30100_I2C_ADDR, &buf[1], 1, false);
-        //i2c_read_blocking(i2c_default, MAX30100_I2C_ADDR, &buf[2], 1, false); 
-        //i2c_read_blocking(i2c_default, MAX30100_I2C_ADDR, &buf[3], 1, false);
         ((dataPtr[0] << 8) | dataPtr[1]) >> 2;
         ((dataPtr[2] << 8) | dataPtr[3]) >> 2;
-        //uint8_t IR = {buf[1] + buf[0]};
-        //uint8_t RED = {buf[3] + buf[2]};
-        //RED[0] = buf[3];
-        //RED[1] = buf[2];
-        //printf("IR2: 0x%04x RED2: 0x%04x\n", buf[0],buf[1]);
-        //printf(":%02x%02x:%02x%02x\n", buf[0],buf[1],buf[2],buf[3]);
-        //return buf;
     }
 }

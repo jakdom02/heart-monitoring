@@ -1,3 +1,8 @@
+/**
+ * @file max30100.h
+ * @author T.Mroz J.Domagala
+ */
+
 #include "hardware/i2c.h"
 #include "stdio.h"
 #include "stdlib.h"
