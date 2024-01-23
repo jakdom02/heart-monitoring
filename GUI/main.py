@@ -199,7 +199,7 @@ class  MainWindow(QWidget):
         irAC = irMaxVal-irMinVal
         r = (redAC/redDC)/(irAC/irDC)
         spoRate = 110-r*25
-        self.spoLabel.setText("spo2: " + str(np.round(spoRate,3)))
+        self.spoLabel.setText("spo2: " + str(np.round(spoRate,3)) + " %" )
 
 
     def CalculateHeartBeat(self,irReadingArray,number1,number2, i = 0):
@@ -232,7 +232,7 @@ class  MainWindow(QWidget):
                     if bpm > 50 and bpm < 250:
                         bpmArray.append(bpm)
                     i+=1
-                self.BPMlabel.setText("BPM: " + str(np.round(np.average(bpmArray),3)))              
+                self.BPMlabel.setText("BPM: " + str(np.round(np.average(bpmArray),2)))              
 
 
 if __name__ == "__main__": 
